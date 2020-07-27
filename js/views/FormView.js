@@ -8,6 +8,7 @@ FormView.setup = function(el) {
   this.resetEl = el.querySelector('[type=reset]');
   this.showResetBtn(false);
   this.bindEvents();
+  return this;
 };
 
 FormView.showResetBtn = function(show = true) {
@@ -15,10 +16,14 @@ FormView.showResetBtn = function(show = true) {
 };
 
 FormView.bindEvents = function() {
+  this.on('submit', (e) => e.preventDefault());
   this.inputEl.addEventListener('keyup', (e) => this.onKeyup(e));
 };
 
-FormView.onKeyup = function() {
+FormView.onKeyup = function(e) {
+  const enter = 13;
   this.showResetBtn(this.inputEl.value.length);
+  if (e.keyCode !== enter) return;
+  this.emit('@submit', { input: this.inputEl.value });
 };
 export default FormView;
